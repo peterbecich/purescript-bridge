@@ -12,7 +12,10 @@ library
   exposed-modules:     MyLib, Types
   hs-source-dirs:      src
   build-depends:       base >=4.8 && <5
-                     , aeson
+                     , aeson >= 1.5.5.0
+                     , aeson-pretty
+                     , bytestring
+                     , constraints >= 0.13
                      , lens
                      , transformers
                      , servant >=0.18.0
@@ -20,6 +23,7 @@ library
                      , text
                      , warp
                      , purescript-bridge
+                     , deriving-aeson
   default-language:    Haskell2010
 
 executable example

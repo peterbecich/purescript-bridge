@@ -38,3 +38,27 @@ fooNumber :: Lens' Foo Int
 fooNumber = _Newtype <<< prop (SProxy :: SProxy "_fooNumber")
 
 --------------------------------------------------------------------------------
+newtype Bar =
+    Bar {
+      _barMessage :: String
+    , _barNumber :: Int
+    }
+
+instance encodeBar :: Encode Bar where
+  encode = genericEncode $ defaultOptions { unwrapSingleConstructors = false }
+instance decodeBar :: Decode Bar where
+  decode = genericDecode $ defaultOptions { unwrapSingleConstructors = false }
+derive instance genericBar :: Generic Bar _
+derive instance newtypeBar :: Newtype Bar _
+
+--------------------------------------------------------------------------------
+_Bar :: Iso' Bar { _barMessage :: String, _barNumber :: Int}
+_Bar = _Newtype
+
+barMessage :: Lens' Bar String
+barMessage = _Newtype <<< prop (SProxy :: SProxy "_barMessage")
+
+barNumber :: Lens' Bar Int
+barNumber = _Newtype <<< prop (SProxy :: SProxy "_barNumber")
+
+--------------------------------------------------------------------------------
