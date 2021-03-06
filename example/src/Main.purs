@@ -2,9 +2,6 @@ module Main where
 
 import Prelude
 
-import Data.Argonaut.Aeson.Decode.Generic (genericDecodeAeson)
-import Data.Argonaut.Aeson.Encode.Generic (genericEncodeAeson)
-import Data.Argonaut.Aeson.Options (defaultOptions)
 import Data.Either (Either(Left, Right))
 import Data.Maybe (Maybe(Just))
 import Data.Lens (over, view, set)
@@ -17,7 +14,9 @@ import Effect.Aff (launchAff_)
 import Affjax (get, post_)
 import Affjax.ResponseFormat (json)
 import Affjax.RequestBody as RequestBody
-
+import Data.Argonaut.Decode.Error (JsonDecodeError)
+import Data.Argonaut.Decode.Generic (genericDecodeJson)
+import Data.Argonaut.Encode.Generic (genericEncodeJson)
 import Types (Foo, fooMessage, fooNumber, fooList)
 
 main :: Effect Unit
@@ -29,10 +28,10 @@ main = log "Hello, Purescript!" *> launchAff_ do
   fooResponse <- get json "/foo"
   for_ fooResponse \fooPayload -> do
     let
-      efoo :: Either String Foo
-      efoo = genericDecodeAeson defaultOptions fooPayload.body
+      efoo :: Either JsonDecodeError Foo
+      efoo = genericDecodeJson fooPayload.body
     case efoo of
-      Left e -> liftEffect $ log $ "Error decoding Foo: " <> e
+      Left e -> liftEffect $ log $ "Error decoding Foo: " <> show e
       Right _ -> pure unit
     for_ efoo \foo -> do
       liftEffect do
@@ -46,6 +45,6 @@ main = log "Hello, Purescript!" *> launchAff_ do
                $ over fooNumber (_+1)
                $ over fooList (\l -> l <> l)
                $ foo
-        response = Just $ RequestBody.json $ genericEncodeAeson defaultOptions foo'
+        response = Just $ RequestBody.json $ genericEncodeJson foo'
       post_ "/foo" response
 

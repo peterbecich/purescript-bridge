@@ -7,11 +7,10 @@ You can edit this file as you like.
   [ "console"
   , "effect"
   , "psci-support"
-  , "foreign-generic"
   , "profunctor-lenses"
   , "aff"
   , "affjax"
-  , "argonaut-aeson-generic"
+  , "argonaut-generic"
   ]
 , packages = ./packages.dhall
 , sources = [ "src/**/*.purs", "test/**/*.purs" ]

@@ -16,7 +16,7 @@ frontEndRoot = "src"
 main :: IO ()
 main = do
   writePSTypesWith
-    (useGenRep <> genForeign (ForeignOptions False False))
+    mempty
     frontEndRoot
     (buildBridge myBridge)
     myTypes
