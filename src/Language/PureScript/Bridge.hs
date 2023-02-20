@@ -1,7 +1,7 @@
-{-# LANGUAGE BlockArguments #-}
-{-# LANGUAGE DataKinds #-}
+{-# LANGUAGE BlockArguments    #-}
+{-# LANGUAGE DataKinds         #-}
 {-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE RecordWildCards #-}
+{-# LANGUAGE RecordWildCards   #-}
 
 module Language.PureScript.Bridge
   ( bridgeSumType,
@@ -16,18 +16,18 @@ module Language.PureScript.Bridge
   )
 where
 
-import Control.Applicative
-import Control.Lens (over, traversed)
+import           Control.Applicative
+import           Control.Lens (over, traversed)
 import qualified Data.Map as M
 import qualified Data.Set as Set
 import qualified Data.Text.IO as T
-import Language.PureScript.Bridge.Builder as Bridge
-import Language.PureScript.Bridge.CodeGenSwitches as Switches
-import Language.PureScript.Bridge.Primitives as Bridge
-import Language.PureScript.Bridge.Printer as Bridge
-import Language.PureScript.Bridge.SumType as Bridge
-import Language.PureScript.Bridge.Tuple as Bridge
-import Language.PureScript.Bridge.TypeInfo as Bridge
+import           Language.PureScript.Bridge.Builder as Bridge
+import           Language.PureScript.Bridge.CodeGenSwitches as Switches
+import           Language.PureScript.Bridge.Primitives as Bridge
+import           Language.PureScript.Bridge.Printer as Bridge
+import           Language.PureScript.Bridge.SumType as Bridge
+import           Language.PureScript.Bridge.Tuple as Bridge
+import           Language.PureScript.Bridge.TypeInfo as Bridge
 
 -- | Your entry point to this library and quite likely all you will need.
 --   Make sure all your types derive `Generic` and `Typeable`.
@@ -130,8 +130,8 @@ bridgeSumType br (SumType t cs is) =
           (br <$> _customConstraints)
           (br _customHead)
           case _customImplementation of
-            Derive -> Derive
-            DeriveNewtype -> DeriveNewtype
+            Derive           -> Derive
+            DeriveNewtype    -> DeriveNewtype
             Explicit members -> Explicit $ bridgeMember <$> members
     bridgeInstance Bounded = Bounded
     bridgeInstance Enum = Enum

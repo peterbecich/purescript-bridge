@@ -1,22 +1,22 @@
-{-# LANGUAGE DataKinds #-}
-{-# LANGUAGE DeriveFunctor #-}
-{-# LANGUAGE DeriveGeneric #-}
-{-# LANGUAGE FlexibleInstances #-}
+{-# LANGUAGE DataKinds             #-}
+{-# LANGUAGE DeriveFunctor         #-}
+{-# LANGUAGE DeriveGeneric         #-}
+{-# LANGUAGE FlexibleInstances     #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
-{-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE RankNTypes #-}
-{-# LANGUAGE TypeApplications #-}
+{-# LANGUAGE OverloadedStrings     #-}
+{-# LANGUAGE RankNTypes            #-}
+{-# LANGUAGE TypeApplications      #-}
 
 module TestData where
 
-import Data.Functor.Classes (Eq1 (liftEq))
-import Data.Proxy
-import Data.Text (Text)
-import Data.Typeable
-import GHC.Generics (Generic)
-import Language.PureScript.Bridge
-import Language.PureScript.Bridge.CodeGenSwitches (defaultSettings)
-import Language.PureScript.Bridge.PSTypes
+import           Data.Functor.Classes (Eq1 (liftEq))
+import           Data.Proxy
+import           Data.Text (Text)
+import           Data.Typeable
+import           GHC.Generics (Generic)
+import           Language.PureScript.Bridge
+import           Language.PureScript.Bridge.CodeGenSwitches (defaultSettings)
+import           Language.PureScript.Bridge.PSTypes
 
 -- Check that examples compile:
 textBridge :: BridgePart
@@ -58,7 +58,7 @@ data Bar a b m c
 data SingleRecord a b = SingleRecord
   { _a :: a,
     _b :: b,
-    c :: String
+    c  :: String
   }
   deriving (Generic, Eq, Ord, Typeable, Show)
 

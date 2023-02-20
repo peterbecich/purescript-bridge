@@ -1,27 +1,32 @@
-{-# LANGUAGE BlockArguments #-}
-{-# LANGUAGE DataKinds #-}
-{-# LANGUAGE DeriveGeneric #-}
+{-# LANGUAGE BlockArguments             #-}
+{-# LANGUAGE DataKinds                  #-}
+{-# LANGUAGE DeriveGeneric              #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
-{-# LANGUAGE TypeApplications #-}
+{-# LANGUAGE TypeApplications           #-}
 
 module RoundTrip.Types where
 
-import Control.Applicative ((<|>))
-import Data.Aeson (FromJSON, ToJSON)
-import Data.Map (Map)
-import Data.Proxy (Proxy (..))
-import Data.Set (Set)
-import Data.Text (Text)
-import GHC.Generics (Generic)
-import Language.PureScript.Bridge (BridgePart, Language (..), SumType, buildBridge, defaultBridge, defaultSwitch, mkSumType, writePSTypes, writePSTypesWith)
-import Language.PureScript.Bridge.TypeParameters (A)
-import System.Directory (removeDirectoryRecursive, removeFile, withCurrentDirectory)
-import System.Exit (ExitCode (ExitSuccess))
-import System.Process (readProcessWithExitCode)
-import Test.HUnit (assertEqual)
-import Test.Hspec (Spec, aroundAll_, describe, it)
-import Test.Hspec.Expectations.Pretty (shouldBe)
-import Test.QuickCheck (Arbitrary (..), chooseEnum, oneof, resize, sized)
+import           Control.Applicative ((<|>))
+import           Data.Aeson (FromJSON, ToJSON)
+import           Data.Map (Map)
+import           Data.Proxy (Proxy (..))
+import           Data.Set (Set)
+import           Data.Text (Text)
+import           GHC.Generics (Generic)
+import           Language.PureScript.Bridge (BridgePart, Language (..), SumType,
+                                             buildBridge, defaultBridge,
+                                             defaultSwitch, mkSumType,
+                                             writePSTypes, writePSTypesWith)
+import           Language.PureScript.Bridge.TypeParameters (A)
+import           System.Directory (removeDirectoryRecursive, removeFile,
+                                   withCurrentDirectory)
+import           System.Exit (ExitCode (ExitSuccess))
+import           System.Process (readProcessWithExitCode)
+import           Test.Hspec (Spec, aroundAll_, describe, it)
+import           Test.Hspec.Expectations.Pretty (shouldBe)
+import           Test.HUnit (assertEqual)
+import           Test.QuickCheck (Arbitrary (..), chooseEnum, oneof, resize,
+                                  sized)
 
 data TestData
   = Maybe (Maybe TestSum)

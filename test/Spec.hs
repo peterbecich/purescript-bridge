@@ -1,36 +1,26 @@
-{-# LANGUAGE CPP #-}
-{-# LANGUAGE DataKinds #-}
-{-# LANGUAGE FlexibleInstances #-}
+{-# LANGUAGE CPP                   #-}
+{-# LANGUAGE DataKinds             #-}
+{-# LANGUAGE FlexibleInstances     #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
-{-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE RankNTypes #-}
-{-# LANGUAGE TypeApplications #-}
+{-# LANGUAGE OverloadedStrings     #-}
+{-# LANGUAGE RankNTypes            #-}
+{-# LANGUAGE TypeApplications      #-}
 
 module Main where
 
 import qualified Data.Map as Map
-import Data.Monoid ((<>))
-import Data.Text (Text)
+import           Data.Monoid ((<>))
+import           Data.Text (Text)
 import qualified Data.Text as T
-import Language.PureScript.Bridge
-import Language.PureScript.Bridge.CodeGenSwitches
-import Language.PureScript.Bridge.TypeParameters
-import RoundTrip.Spec (roundtripSpec)
-import Test.Hspec
-  ( Spec,
-    describe,
-    hspec,
-    it,
-  )
-import Test.Hspec.Expectations.Pretty
-import TestData
-import Text.PrettyPrint.Leijen.Text
-  ( Doc,
-    cat,
-    linebreak,
-    punctuate,
-    vsep,
-  )
+import           Language.PureScript.Bridge
+import           Language.PureScript.Bridge.CodeGenSwitches
+import           Language.PureScript.Bridge.TypeParameters
+import           RoundTrip.Spec (roundtripSpec)
+import           Test.Hspec (Spec, describe, hspec, it)
+import           Test.Hspec.Expectations.Pretty
+import           TestData
+import           Text.PrettyPrint.Leijen.Text (Doc, cat, linebreak, punctuate,
+                                               vsep)
 
 main :: IO ()
 main = hspec $ allTests *> roundtripSpec

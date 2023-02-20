@@ -1,109 +1,72 @@
-{-# LANGUAGE BlockArguments #-}
-{-# LANGUAGE DataKinds #-}
-{-# LANGUAGE KindSignatures #-}
-{-# LANGUAGE OverloadedLists #-}
+{-# LANGUAGE BlockArguments    #-}
+{-# LANGUAGE DataKinds         #-}
+{-# LANGUAGE KindSignatures    #-}
+{-# LANGUAGE OverloadedLists   #-}
 {-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE RecordWildCards #-}
+{-# LANGUAGE RecordWildCards   #-}
 
 module Language.PureScript.Bridge.Printer where
 
-import Control.Arrow ((&&&))
-import Control.Lens (to, (%~), (<>~), (^.))
-import Control.Monad (unless)
-import Data.Char (isLower)
-import Data.Function (on, (&))
-import Data.List (groupBy, nubBy, sortBy)
-import Data.List.NonEmpty (NonEmpty ((:|)))
+import           Control.Arrow ((&&&))
+import           Control.Lens (to, (%~), (<>~), (^.))
+import           Control.Monad (unless)
+import           Data.Char (isLower)
+import qualified Data.Char as C
+import           Data.Function (on, (&))
+import           Data.List (groupBy, nubBy, sortBy)
+import           Data.List.NonEmpty (NonEmpty ((:|)))
 import qualified Data.List.NonEmpty as NE
-import Data.Map.Strict (Map)
+import           Data.Map.Strict (Map)
 import qualified Data.Map.Strict as Map
-import Data.Maybe (catMaybes, fromMaybe, isJust)
-import Data.Set (Set)
+import           Data.Maybe (catMaybes, fromMaybe, isJust)
+import           Data.Set (Set)
 import qualified Data.Set as Set
-import Data.Text (Text)
+import           Data.Text (Text)
 import qualified Data.Text as T
 import qualified Data.Text.IO as T
 import qualified Language.PureScript.Bridge.CodeGenSwitches as Switches
-import Language.PureScript.Bridge.PSTypes (psUnit)
-import Language.PureScript.Bridge.SumType
-  ( CustomInstance (..),
-    DataConstructor (..),
-    DataConstructorArgs (..),
-    ImportLine (..),
-    ImportLines,
-    Instance (..),
-    InstanceImplementation (..),
-    InstanceMember (..),
-    PSInstance,
-    RecordEntry (..),
-    SumType (SumType),
-    getUsedTypes,
-    importsFromList,
-    instanceToImportLines,
-    nootype,
-    recLabel,
-    recValue,
-    sigConstructor,
-    _recLabel,
-  )
-import Language.PureScript.Bridge.TypeInfo
-  ( Language (PureScript),
-    PSType,
-    TypeInfo (TypeInfo),
-    flattenTypeInfo,
-    typeName,
-    _typeModule,
-    _typeName,
-    _typePackage,
-    _typeParameters,
-  )
-import System.Directory
-  ( createDirectoryIfMissing,
-    doesDirectoryExist,
-  )
-import System.FilePath
-  ( joinPath,
-    takeDirectory,
-    (</>),
-  )
-import Text.PrettyPrint.Leijen.Text
-  ( Doc,
-    backslash,
-    char,
-    colon,
-    comma,
-    displayTStrict,
-    dquotes,
-    hang,
-    hsep,
-    indent,
-    lbrace,
-    lbracket,
-    line,
-    linebreak,
-    lparen,
-    nest,
-    parens,
-    punctuate,
-    rbrace,
-    rbracket,
-    renderPretty,
-    rparen,
-    softline,
-    textStrict,
-    vsep,
-    (<+>),
-  )
-import qualified Data.Char as C
+import           Language.PureScript.Bridge.PSTypes (psUnit)
+import           Language.PureScript.Bridge.SumType (CustomInstance (..),
+                                                     DataConstructor (..),
+                                                     DataConstructorArgs (..),
+                                                     ImportLine (..),
+                                                     ImportLines, Instance (..),
+                                                     InstanceImplementation (..),
+                                                     InstanceMember (..),
+                                                     PSInstance,
+                                                     RecordEntry (..),
+                                                     SumType (SumType),
+                                                     _recLabel, getUsedTypes,
+                                                     importsFromList,
+                                                     instanceToImportLines,
+                                                     nootype, recLabel,
+                                                     recValue, sigConstructor)
+import           Language.PureScript.Bridge.TypeInfo (Language (PureScript),
+                                                      PSType,
+                                                      TypeInfo (TypeInfo),
+                                                      _typeModule, _typeName,
+                                                      _typePackage,
+                                                      _typeParameters,
+                                                      flattenTypeInfo, typeName)
+import           System.Directory (createDirectoryIfMissing, doesDirectoryExist)
+import           System.FilePath (joinPath, takeDirectory, (</>))
+import           Text.PrettyPrint.Leijen.Text (Doc, backslash, char, colon,
+                                               comma, displayTStrict, dquotes,
+                                               hang, hsep, indent, lbrace,
+                                               lbracket, line, linebreak,
+                                               lparen, nest, parens, punctuate,
+                                               rbrace, rbracket, renderPretty,
+                                               rparen, softline, textStrict,
+                                               vsep, (<+>))
 
 renderText :: Doc -> Text
 renderText = T.replace " \n" "\n" . displayTStrict . renderPretty 0.4 200
 
 data Module (lang :: Language) = PSModule
-  { psModuleName :: !Text,
-    psImportLines :: !ImportLines,
+  { psModuleName       :: !Text,
+    psImportLines      :: !ImportLines,
     psQualifiedImports :: !(Map Text Text),
-    psTypes :: ![SumType lang]
+    psTypes            :: ![SumType lang]
   }
   deriving (Show)
 
@@ -299,7 +262,7 @@ constructorToDoc :: DataConstructor 'PureScript -> Doc
 constructorToDoc (DataConstructor n args) =
   hsep $
     textStrict n : case args of
-      Nullary -> []
+      Nullary   -> []
       Normal ts -> NE.toList $ typeInfoToDoc <$> ts
       Record rs -> [vrecord $ fieldSignatures rs]
 
@@ -656,12 +619,12 @@ unlessM :: Monad m => m Bool -> m () -> m ()
 unlessM mbool action = mbool >>= flip unless action
 
 constructorPattern :: DataConstructor 'PureScript -> Doc
-constructorPattern (DataConstructor name Nullary) = nullaryPattern name
+constructorPattern (DataConstructor name Nullary)     = nullaryPattern name
 constructorPattern (DataConstructor name (Normal ts)) = normalPattern name ts
 constructorPattern (DataConstructor name (Record rs)) = recordPattern name rs
 
 constructor :: DataConstructorArgs 'PureScript -> Doc
-constructor Nullary = nullaryExpr
+constructor Nullary     = nullaryExpr
 constructor (Normal ts) = normalExpr ts
 constructor (Record rs) = hrecord $ fields rs
 
@@ -676,7 +639,7 @@ normalPattern name = pattern name . hsep . normalLabels
 
 normalExpr :: NonEmpty PSType -> Doc
 normalExpr (_ :| []) = "a"
-normalExpr ts = parens . hsep . punctuate " /\\" $ normalLabels ts
+normalExpr ts        = parens . hsep . punctuate " /\\" $ normalLabels ts
 
 normalLabels :: NonEmpty PSType -> [Doc]
 normalLabels = fmap char . zipWith const ['a' ..] . NE.toList
@@ -756,7 +719,7 @@ encloseHsep :: Doc -> Doc -> Doc -> [Doc] -> Doc
 encloseHsep left right sp ds =
   case ds of
     [] -> left <> right
-    _ -> left <> hsep (punctuate sp ds) <> right
+    _  -> left <> hsep (punctuate sp ds) <> right
 
 encloseVsep :: Doc -> Doc -> Doc -> [Doc] -> Doc
 encloseVsep left right sp ds =

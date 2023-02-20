@@ -1,32 +1,44 @@
-{-# LANGUAGE BlockArguments #-}
-{-# LANGUAGE DataKinds #-}
-{-# LANGUAGE DeriveGeneric #-}
+{-# LANGUAGE BlockArguments    #-}
+{-# LANGUAGE DataKinds         #-}
+{-# LANGUAGE DeriveGeneric     #-}
 {-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE TypeApplications #-}
+{-# LANGUAGE TypeApplications  #-}
 
 module RoundTrip.Spec where
 
-import Control.Exception (bracket)
-import Data.Aeson (FromJSON, ToJSON (toJSON), eitherDecode, encode, fromJSON)
-import Data.ByteString.Lazy (hGetContents, stripSuffix)
-import Data.ByteString.Lazy.UTF8 (fromString, toString)
-import Data.List (isInfixOf)
-import Data.Maybe (fromMaybe)
-import Data.Proxy (Proxy (..))
-import GHC.Generics (Generic)
-import Language.PureScript.Bridge (BridgePart, Language (..), SumType, argonaut, buildBridge, defaultBridge, defaultSwitch, equal, functor, genericShow, mkSumType, order, writePSTypes, writePSTypesWith)
-import Language.PureScript.Bridge.TypeParameters (A)
-import RoundTrip.Types
-import System.Directory (removeDirectoryRecursive, removeFile, withCurrentDirectory)
-import System.Exit (ExitCode (ExitSuccess))
-import System.IO (BufferMode (..), hFlush, hGetLine, hPutStrLn, hSetBuffering, stderr, stdout)
-import System.Process (CreateProcess (std_err, std_in, std_out), StdStream (CreatePipe), createProcess, getProcessExitCode, proc, readProcessWithExitCode, terminateProcess, waitForProcess)
-import Test.HUnit (assertBool, assertEqual)
-import Test.Hspec (Spec, around, aroundAll_, around_, describe, it)
-import Test.Hspec.Expectations.Pretty (shouldBe)
-import Test.Hspec.QuickCheck (prop)
-import Test.QuickCheck (noShrinking, once, verbose, withMaxSuccess)
-import Test.QuickCheck.Property (Testable (property))
+import           Control.Exception (bracket)
+import           Data.Aeson (FromJSON, ToJSON (toJSON), eitherDecode, encode,
+                             fromJSON)
+import           Data.ByteString.Lazy (hGetContents, stripSuffix)
+import           Data.ByteString.Lazy.UTF8 (fromString, toString)
+import           Data.List (isInfixOf)
+import           Data.Maybe (fromMaybe)
+import           Data.Proxy (Proxy (..))
+import           GHC.Generics (Generic)
+import           Language.PureScript.Bridge (BridgePart, Language (..), SumType,
+                                             argonaut, buildBridge,
+                                             defaultBridge, defaultSwitch,
+                                             equal, functor, genericShow,
+                                             mkSumType, order, writePSTypes,
+                                             writePSTypesWith)
+import           Language.PureScript.Bridge.TypeParameters (A)
+import           RoundTrip.Types
+import           System.Directory (removeDirectoryRecursive, removeFile,
+                                   withCurrentDirectory)
+import           System.Exit (ExitCode (ExitSuccess))
+import           System.IO (BufferMode (..), hFlush, hGetLine, hPutStrLn,
+                            hSetBuffering, stderr, stdout)
+import           System.Process (CreateProcess (std_err, std_in, std_out),
+                                 StdStream (CreatePipe), createProcess,
+                                 getProcessExitCode, proc,
+                                 readProcessWithExitCode, terminateProcess,
+                                 waitForProcess)
+import           Test.Hspec (Spec, around, aroundAll_, around_, describe, it)
+import           Test.Hspec.Expectations.Pretty (shouldBe)
+import           Test.Hspec.QuickCheck (prop)
+import           Test.HUnit (assertBool, assertEqual)
+import           Test.QuickCheck (noShrinking, once, verbose, withMaxSuccess)
+import           Test.QuickCheck.Property (Testable (property))
 
 myBridge :: BridgePart
 myBridge = defaultBridge
