@@ -1,4 +1,4 @@
-module Main where
+module MainTwo where
 
 import Prelude
 
