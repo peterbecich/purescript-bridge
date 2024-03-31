@@ -11,7 +11,6 @@ module Main where
 
 import qualified Data.Map as Map
 import           Data.Monoid ((<>))
-import           Data.String.QQ
 import           Data.Text (Text)
 import qualified Data.Text as T
 import           Data.Word (Word, Word64)
@@ -29,6 +28,7 @@ import           Language.PureScript.Bridge (CustomInstance (CustomInstance),
                                              renderText, sumTypeToDocs,
                                              sumTypeToModule)
 import           Language.PureScript.Bridge.TypeParameters (A, B, C, M1)
+import           NeatInterpolation (trimming, untrimming)
 import qualified RoundTripArgonautAesonGeneric.Spec (roundtripSpec)
 import qualified RoundTripJsonHelpers.Spec (roundtripSpec)
 import           Test.Hspec (Spec, describe, hspec, it)
@@ -94,24 +94,24 @@ allTests = do
                         (buildBridge defaultBridge)
                         (mkSumType @WeekInMonth)
                 doc = vsep $ sumTypeToDocs sumType
-                txt = T.pack [s|
-data WeekInMonth
-  = WeekFirst
-  | WeekSecond
-  | WeekThird
-  | WeekFourth
-  | WeekLast
+                txt = [trimming|
+                  data WeekInMonth
+                    = WeekFirst
+                    | WeekSecond
+                    | WeekThird
+                    | WeekFourth
+                    | WeekLast
 
-derive instance Generic WeekInMonth _
+                  derive instance Generic WeekInMonth _
 
-instance Enum WeekInMonth where
-  succ = genericSucc
-  pred = genericPred
+                  instance Enum WeekInMonth where
+                    succ = genericSucc
+                    pred = genericPred
 
-instance Bounded WeekInMonth where
-  bottom = genericBottom
-  top = genericTop
-|]
+                  instance Bounded WeekInMonth where
+                    bottom = genericBottom
+                    top = genericTop
+                  |]
              in doc `shouldRender` txt
         it "tests generation of custom typeclasses" $
             let sumType =
@@ -119,24 +119,23 @@ instance Bounded WeekInMonth where
                         (buildBridge defaultBridge)
                         (customNewtypeDerived . customDerived . custom $ mkSumType @Foo)
                 doc = vsep $ sumTypeToDocs sumType
-                txt =
-                    T.unlines
-                        [ "data Foo"
-                        , "  = Foo"
-                        , "  | Bar Int"
-                        , "  | FooBar Int String"
-                        , ""
-                        , "derive newtype instance (Eq Foo) => MyNTClass Foo"
-                        , ""
-                        , "derive instance (Eq Foo, Show Foo) => MyDClass Foo"
-                        , ""
-                        , "instance MyClass Foo where"
-                        , "  member1 foo bar = undefined"
-                        , "  member2 = do"
-                        , "    pure unit"
-                        , ""
-                        , "derive instance Generic Foo _"
-                        ]
+                txt = [trimming|
+                        data Foo
+                          = Foo
+                          | Bar Int
+                          | FooBar Int String
+
+                        derive newtype instance (Eq Foo) => MyNTClass Foo
+
+                        derive instance (Eq Foo, Show Foo) => MyDClass Foo
+
+                        instance MyClass Foo where
+                          member1 foo bar = undefined
+                          member2 = do
+                            pure unit
+
+                        derive instance Generic Foo _
+                        |]
              in doc `shouldRender` txt
         it "tests generation of typeclasses for custom type Foo" $
             let sumType =
@@ -144,22 +143,21 @@ instance Bounded WeekInMonth where
                         (buildBridge defaultBridge)
                         (genericShow . order $ mkSumType @Foo)
                 doc = vsep $ sumTypeToDocs sumType
-                txt =
-                    T.unlines
-                        [ "data Foo"
-                        , "  = Foo"
-                        , "  | Bar Int"
-                        , "  | FooBar Int String"
-                        , ""
-                        , "instance Show Foo where"
-                        , "  show a = genericShow a"
-                        , ""
-                        , "derive instance Eq Foo"
-                        , ""
-                        , "derive instance Ord Foo"
-                        , ""
-                        , "derive instance Generic Foo _"
-                        ]
+                txt = [trimming|
+                        data Foo
+                          = Foo
+                          | Bar Int
+                          | FooBar Int String
+
+                        instance Show Foo where
+                          show a = genericShow a
+
+                        derive instance Eq Foo
+
+                        derive instance Ord Foo
+
+                        derive instance Generic Foo _
+                        |]
              in doc `shouldRender` txt
         it "tests generation of typeclasses for custom type Func" $
             let sumType =
@@ -167,19 +165,18 @@ instance Bounded WeekInMonth where
                         (buildBridge defaultBridge)
                         (equal1 . functor . genericShow $ mkSumType @(Func A))
                 doc = vsep $ sumTypeToDocs sumType
-                txt =
-                    T.unlines
-                        [ "data Func a = Func Int a"
-                        , ""
-                        , "derive instance Eq1 Func"
-                        , ""
-                        , "derive instance Functor Func"
-                        , ""
-                        , "instance (Show a) => Show (Func a) where"
-                        , "  show a = genericShow a"
-                        , ""
-                        , "derive instance Generic (Func a) _"
-                        ]
+                txt = [trimming|
+                        data Func a = Func Int a
+
+                        derive instance Eq1 Func
+
+                        derive instance Functor Func
+
+                        instance (Show a) => Show (Func a) where
+                          show a = genericShow a
+
+                        derive instance Generic (Func a) _
+                        |]
              in doc `shouldRender` txt
         it "tests the generation of a whole (dummy) module" $
             let advanced' :: SumType 'PureScript
@@ -191,25 +188,23 @@ instance Bounded WeekInMonth where
                 modules = sumTypeToModule Nothing advanced'
                 m = head . map (moduleToText) . Map.elems $ modules
                 txt =
-                    T.unlines
-                        [ "-- File auto generated by purescript-bridge! --"
-                        , "module TestData where"
-                        , ""
-                        , "import Prelude"
-                        , ""
-                        , "import Data.Either (Either)"
-                        , "import Data.Generic.Rep (class Generic)"
-                        , "import Data.Maybe (Maybe(..))"
-                        , "import Data.Newtype (class Newtype)"
-                        , ""
-                        , "data Bar a b m c"
-                        , "  = Bar1 (Maybe a)"
-                        , "  | Bar2 (Either a b)"
-                        , "  | Bar3 a"
-                        , "  | Bar4 { myMonadicResult :: m b }"
-                        , ""
-                        , "derive instance Generic (Bar a b m c) _"
-                        ]
+                  [untrimming| -- File auto generated by purescript-bridge! --
+                               module TestData where
+
+                               import Prelude
+
+                               import Data.Either (Either)
+                               import Data.Generic.Rep (class Generic)
+                               import Data.Maybe (Maybe(..))
+                               import Data.Newtype (class Newtype)
+
+                               data Bar a b m c
+                                 = Bar1 (Maybe a)
+                                 | Bar2 (Either a b)
+                                 | Bar3 a
+                                 | Bar4 { myMonadicResult :: m b }
+
+                               derive instance Generic (Bar a b m c) _|]
              in m `shouldBe` txt
         it "tests generation of newtypes for record data type" $
             let recType' =
@@ -217,18 +212,17 @@ instance Bounded WeekInMonth where
                         (buildBridge defaultBridge)
                         (mkSumType @(SingleRecord A B))
                 doc = vsep $ sumTypeToDocs recType'
-                txt =
-                    T.unlines
-                        [ "newtype SingleRecord a b = SingleRecord"
-                        , "  { _a :: a"
-                        , "  , _b :: b"
-                        , "  , c :: String"
-                        , "  }"
-                        , ""
-                        , "derive instance Generic (SingleRecord a b) _"
-                        , ""
-                        , "derive instance Newtype (SingleRecord a b) _"
-                        ]
+                txt = [trimming|
+                        newtype SingleRecord a b = SingleRecord
+                          { _a :: a
+                          , _b :: b
+                          , c :: String
+                          }
+
+                        derive instance Generic (SingleRecord a b) _
+
+                        derive instance Newtype (SingleRecord a b) _
+                        |]
              in doc `shouldRender` txt
         it "tests generation of newtypes for haskell newtype" $
             let recType' =
@@ -236,14 +230,13 @@ instance Bounded WeekInMonth where
                         (buildBridge defaultBridge)
                         (mkSumType @SomeNewtype)
                 doc = vsep $ sumTypeToDocs recType'
-                txt =
-                    T.unlines
-                        [ "newtype SomeNewtype = SomeNewtype Int"
-                        , ""
-                        , "derive instance Generic SomeNewtype _"
-                        , ""
-                        , "derive instance Newtype SomeNewtype _"
-                        ]
+                txt = [trimming|
+                        newtype SomeNewtype = SomeNewtype Int
+
+                        derive instance Generic SomeNewtype _
+
+                        derive instance Newtype SomeNewtype _
+                        |]
              in doc `shouldRender` txt
         it "tests generation of newtypes for haskell data type with one argument" $
             let recType' =
@@ -251,14 +244,13 @@ instance Bounded WeekInMonth where
                         (buildBridge defaultBridge)
                         (mkSumType @SingleValueConstr)
                 doc = vsep $ sumTypeToDocs recType'
-                txt =
-                    T.unlines
-                        [ "newtype SingleValueConstr = SingleValueConstr Int"
-                        , ""
-                        , "derive instance Generic SingleValueConstr _"
-                        , ""
-                        , "derive instance Newtype SingleValueConstr _"
-                        ]
+                txt = [trimming|
+                        newtype SingleValueConstr = SingleValueConstr Int
+
+                        derive instance Generic SingleValueConstr _
+
+                        derive instance Newtype SingleValueConstr _
+                        |]
              in doc `shouldRender` txt
         it "tests generation for haskell data type with one constructor, two arguments" $
             let recType' =
@@ -266,12 +258,11 @@ instance Bounded WeekInMonth where
                       (buildBridge defaultBridge)
                       (mkSumType @SingleProduct)
                 doc = vsep $ sumTypeToDocs recType'
-                txt =
-                  T.unlines
-                      [ "data SingleProduct = SingleProduct String Int"
-                      , ""
-                      , "derive instance Generic SingleProduct _"
-                      ]
+                txt = [trimming|
+                      data SingleProduct = SingleProduct String Int
+
+                      derive instance Generic SingleProduct _
+                      |]
              in doc `shouldRender` txt
         it "tests generation Eq instances for polymorphic types" $
             let recType' =
@@ -279,20 +270,19 @@ instance Bounded WeekInMonth where
                         (buildBridge defaultBridge)
                         (equal $ mkSumType @(SingleRecord A B))
                 doc = vsep $ sumTypeToDocs recType'
-                txt =
-                    T.unlines
-                        [ "newtype SingleRecord a b = SingleRecord"
-                        , "  { _a :: a"
-                        , "  , _b :: b"
-                        , "  , c :: String"
-                        , "  }"
-                        , ""
-                        , "derive instance (Eq a, Eq b) => Eq (SingleRecord a b)"
-                        , ""
-                        , "derive instance Generic (SingleRecord a b) _"
-                        , ""
-                        , "derive instance Newtype (SingleRecord a b) _"
-                        ]
+                txt = [trimming|
+                        newtype SingleRecord a b = SingleRecord
+                          { _a :: a
+                          , _b :: b
+                          , c :: String
+                          }
+
+                        derive instance (Eq a, Eq b) => Eq (SingleRecord a b)
+
+                        derive instance Generic (SingleRecord a b) _
+
+                        derive instance Newtype (SingleRecord a b) _
+                        |]
              in doc `shouldRender` txt
         it "tests generation of Ord instances for polymorphic types" $
             let recType' =
@@ -300,22 +290,21 @@ instance Bounded WeekInMonth where
                         (buildBridge defaultBridge)
                         (order $ mkSumType @(SingleRecord A B))
                 doc = vsep $ sumTypeToDocs recType'
-                txt =
-                    T.unlines
-                        [ "newtype SingleRecord a b = SingleRecord"
-                        , "  { _a :: a"
-                        , "  , _b :: b"
-                        , "  , c :: String"
-                        , "  }"
-                        , ""
-                        , "derive instance (Eq a, Eq b) => Eq (SingleRecord a b)"
-                        , ""
-                        , "derive instance (Ord a, Ord b) => Ord (SingleRecord a b)"
-                        , ""
-                        , "derive instance Generic (SingleRecord a b) _"
-                        , ""
-                        , "derive instance Newtype (SingleRecord a b) _"
-                        ]
+                txt = [trimming|
+                        newtype SingleRecord a b = SingleRecord
+                          { _a :: a
+                          , _b :: b
+                          , c :: String
+                          }
+
+                        derive instance (Eq a, Eq b) => Eq (SingleRecord a b)
+
+                        derive instance (Ord a, Ord b) => Ord (SingleRecord a b)
+
+                        derive instance Generic (SingleRecord a b) _
+
+                        derive instance Newtype (SingleRecord a b) _
+                        |]
              in doc `shouldRender` txt
 
     describe "tests bridging Haskells Data.Word to PureScripts Data.Word from purescript-word" $ do
@@ -328,26 +317,25 @@ instance Bounded WeekInMonth where
                             modules = sumTypeToModule Nothing (bridgeSumType bridge sumType)
                          in head . map moduleToText . Map.elems $ modules
                     expectedText =
-                        T.unlines
-                            [ "-- File auto generated by purescript-bridge! --"
-                            , "module TestData where"
-                            , ""
-                            , "import Prelude"
-                            , ""
-                            , "import Data.Generic.Rep (class Generic)"
-                            , "import Data.Lens.Iso.Newtype (_Newtype)"
-                            , "import Data.Lens.Record (prop)"
-                            , "import Data.Maybe (Maybe(..))"
-                            , "import Data.Newtype (class Newtype)"
-                            , "import Data.Word (Word64)"
-                            , "import Type.Proxy (Proxy(Proxy))"
-                            , ""
-                            , "newtype Simple Word64 = Simple Word64"
-                            , ""
-                            , "derive instance Generic (Simple Word64) _"
-                            , ""
-                            , "derive instance Newtype (Simple Word64) _"
-                            ]
+                      [untrimming| -- File auto generated by purescript-bridge! --
+                                   module TestData where
+
+                                   import Prelude
+
+                                   import Data.Generic.Rep (class Generic)
+                                   import Data.Lens.Iso.Newtype (_Newtype)
+                                   import Data.Lens.Record (prop)
+                                   import Data.Maybe (Maybe(..))
+                                   import Data.Newtype (class Newtype)
+                                   import Data.Word (Word64)
+                                   import Type.Proxy (Proxy(Proxy))
+
+                                   newtype Simple Word64 = Simple Word64
+
+                                   derive instance Generic (Simple Word64) _
+
+                                   derive instance Newtype (Simple Word64) _|]
+
                 createModuleText (mkSumType @(Simple Word64)) `shouldBe` expectedText
         describe "buildBridge" $
             it "should create the correct type information for Word" $ do
