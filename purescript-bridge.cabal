@@ -67,8 +67,10 @@ Test-Suite tests
                , purescript-bridge
                , QuickCheck
                , text
+               , text-show
                , utf8-string
                , wl-pprint-text
+               , string-qq
 
   hs-source-dirs:   test
   default-language: Haskell2010

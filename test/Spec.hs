@@ -3,6 +3,7 @@
 {-# LANGUAGE FlexibleInstances     #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE OverloadedStrings     #-}
+{-# LANGUAGE QuasiQuotes           #-}
 {-# LANGUAGE RankNTypes            #-}
 {-# LANGUAGE TypeApplications      #-}
 
@@ -10,6 +11,7 @@ module Main where
 
 import qualified Data.Map as Map
 import           Data.Monoid ((<>))
+import           Data.String.QQ
 import           Data.Text (Text)
 import qualified Data.Text as T
 import           Data.Word (Word, Word64)
@@ -32,7 +34,8 @@ import qualified RoundTripJsonHelpers.Spec (roundtripSpec)
 import           Test.Hspec (Spec, describe, hspec, it)
 import           Test.Hspec.Expectations.Pretty (Expectation, shouldBe)
 import           TestData (Bar, Foo, Func, Simple, SingleProduct, SingleRecord,
-                           SingleValueConstr, SomeNewtype)
+                           SingleValueConstr, SomeNewtype, WeekInMonth,
+                           weekInMonth)
 import           Text.PrettyPrint.Leijen.Text (Doc, cat, linebreak, punctuate,
                                                vsep)
 
@@ -85,6 +88,31 @@ customDerived (SumType t cs is) = SumType t cs $ customInstance : is
 allTests :: Spec
 allTests = do
     describe "buildBridge without lens-code-gen" $ do
+        it "week in month" $ do
+            let sumType =
+                    bridgeSumType
+                        (buildBridge defaultBridge)
+                        (mkSumType @WeekInMonth)
+                doc = vsep $ sumTypeToDocs sumType
+                txt = T.pack [s|
+data WeekInMonth
+  = WeekFirst
+  | WeekSecond
+  | WeekThird
+  | WeekFourth
+  | WeekLast
+
+derive instance Generic WeekInMonth _
+
+instance Enum WeekInMonth where
+  succ = genericSucc
+  pred = genericPred
+
+instance Bounded WeekInMonth where
+  bottom = genericBottom
+  top = genericTop
+|]
+             in doc `shouldRender` txt
         it "tests generation of custom typeclasses" $
             let sumType =
                     bridgeSumType
@@ -232,20 +260,19 @@ allTests = do
                         , "derive instance Newtype SingleValueConstr _"
                         ]
              in doc `shouldRender` txt
-        it
-            "tests generation for haskell data type with one constructor, two arguments"
-            $ let recType' =
-                    bridgeSumType
-                        (buildBridge defaultBridge)
-                        (mkSumType @SingleProduct)
-                  doc = vsep $ sumTypeToDocs recType'
-                  txt =
-                    T.unlines
-                        [ "data SingleProduct = SingleProduct String Int"
-                        , ""
-                        , "derive instance Generic SingleProduct _"
-                        ]
-               in doc `shouldRender` txt
+        it "tests generation for haskell data type with one constructor, two arguments" $
+            let recType' =
+                  bridgeSumType
+                      (buildBridge defaultBridge)
+                      (mkSumType @SingleProduct)
+                doc = vsep $ sumTypeToDocs recType'
+                txt =
+                  T.unlines
+                      [ "data SingleProduct = SingleProduct String Int"
+                      , ""
+                      , "derive instance Generic SingleProduct _"
+                      ]
+             in doc `shouldRender` txt
         it "tests generation Eq instances for polymorphic types" $
             let recType' =
                     bridgeSumType

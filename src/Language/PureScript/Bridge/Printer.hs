@@ -7,9 +7,9 @@
 
 module Language.PureScript.Bridge.Printer where
 
-import Debug.Trace
-import Data.Maybe (listToMaybe)
-import Data.Char (isLower)
+import           Data.Char (isLower)
+import           Data.Maybe (listToMaybe)
+import           Debug.Trace
 
 import           Control.Arrow ((&&&))
 import           Control.Lens (to, (%~), (<>~), (^.))

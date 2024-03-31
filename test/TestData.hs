@@ -1,6 +1,8 @@
 {-# LANGUAGE DataKinds             #-}
 {-# LANGUAGE DeriveFunctor         #-}
 {-# LANGUAGE DeriveGeneric         #-}
+{-# LANGUAGE DerivingStrategies    #-}
+{-# LANGUAGE DerivingVia           #-}
 {-# LANGUAGE FlexibleInstances     #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE OverloadedStrings     #-}
@@ -9,6 +11,7 @@
 
 module TestData where
 
+import qualified Data.Aeson as Aeson
 import           Data.Functor.Classes (Eq1 (liftEq))
 import           Data.Proxy ()
 import           Data.Text (Text)
@@ -24,6 +27,8 @@ import           Language.PureScript.Bridge (BridgePart, DataConstructor,
                                              mkTypeInfo, typeModule, typeName,
                                              (<|>), (^==))
 import           Language.PureScript.Bridge.PSTypes (psString)
+import           TextShow
+import           TextShow.Generic (FromGeneric (..))
 
 -- Check that examples compile:
 textBridge :: BridgePart
@@ -113,3 +118,14 @@ t :: TypeInfo 'PureScript
 cs :: [DataConstructor 'PureScript]
 psB :: SumType 'PureScript
 psB@(SumType t cs _) = bridgeSumType (buildBridge defaultBridge) b
+
+data WeekInMonth = WeekFirst | WeekSecond | WeekThird | WeekFourth | WeekLast
+  deriving (Eq, Generic, Show)
+  deriving (TextShow)
+    via FromGeneric WeekInMonth
+instance Aeson.ToJSON WeekInMonth where
+  toEncoding = Aeson.genericToEncoding Aeson.defaultOptions
+instance Aeson.FromJSON WeekInMonth
+
+weekInMonth :: HaskellType
+weekInMonth = mkTypeInfo @WeekInMonth

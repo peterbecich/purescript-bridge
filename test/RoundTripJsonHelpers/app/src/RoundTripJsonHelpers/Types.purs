@@ -32,6 +32,7 @@ import Data.Show.Generic (genericShow)
 import Data.Tuple (Tuple)
 import Data.Tuple.Nested ((/\))
 import Foreign.Object (Object)
+import GHC.Types (List)
 import Type.Proxy (Proxy(Proxy))
 
 data TestData
@@ -67,7 +68,7 @@ data TestSum
   | Int Int
   | Number Number
   | String String
-  | Array (Array Int)
+  | Array (List Int)
   | InlineRecord
     { why :: String
     , wouldYouDoThis :: Int

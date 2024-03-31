@@ -1,12 +1,12 @@
 module Main where
 
+import           ArgonautTypes
 import           Control.Lens
 import           Data.Text (pack)
+import           JsonHelpersTypes
 import           Language.PureScript.Bridge
 import qualified MyLib (main)
 import           Types
-import           ArgonautTypes
-import           JsonHelpersTypes
 
 main :: IO ()
 main = do

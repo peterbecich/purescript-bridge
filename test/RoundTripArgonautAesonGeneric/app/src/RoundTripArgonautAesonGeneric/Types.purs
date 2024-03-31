@@ -22,6 +22,7 @@ import Data.Lens.Record (prop)
 import Data.Maybe (Maybe(..))
 import Data.Newtype (class Newtype)
 import Data.Show.Generic (genericShow)
+import GHC.Types (List)
 import Type.Proxy (Proxy(Proxy))
 
 newtype TestData = Maybe (Maybe TestSum)
@@ -51,7 +52,7 @@ data TestSum
   | Int Int
   | Number Number
   | String String
-  | Array (Array Int)
+  | Array (List Int)
 
 derive instance Eq TestSum
 

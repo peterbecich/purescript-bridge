@@ -49,7 +49,8 @@ makeLenses ''Baz
 data ID a = ID
   deriving (Generic, Show)
 
-newtype ID2 a = ID2 {getID :: Int}
+newtype ID2 a
+  = ID2 { getID :: Int }
   deriving (Generic, Show)
 
 
