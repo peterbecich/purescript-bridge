@@ -11,7 +11,6 @@ module Main where
 
 import qualified Data.Map as Map
 import           Data.Monoid ((<>))
-import           Data.Text (Text)
 import qualified Data.Text as T
 import           Data.Word (Word, Word64)
 import           Language.PureScript.Bridge (CustomInstance (CustomInstance),
@@ -103,6 +102,8 @@ allTests = do
                     | WeekLast
 
                   derive instance Generic WeekInMonth _
+
+                  derive instance Ord WeekInMonth
 
                   instance Enum WeekInMonth where
                     succ = genericSucc
@@ -313,7 +314,6 @@ allTests = do
                 let createModuleText :: SumType 'Haskell -> T.Text
                     createModuleText sumType =
                         let bridge = buildBridge defaultBridge
-                            -- modules = sumTypeToModule (bridgeSumType bridge sumType) Map.empty
                             modules = sumTypeToModule Nothing (bridgeSumType bridge sumType)
                          in head . map moduleToText . Map.elems $ modules
                     expectedText =
@@ -349,5 +349,5 @@ allTests = do
                             }
                  in bst `shouldBe` ti
 
-shouldRender :: Doc -> Text -> Expectation
+shouldRender :: Doc -> T.Text -> Expectation
 shouldRender actual expected = renderText actual `shouldBe` T.stripEnd expected

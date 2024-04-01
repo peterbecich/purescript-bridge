@@ -8,13 +8,11 @@
 module Language.PureScript.Bridge.Printer where
 
 import           Data.Char (isLower)
-import           Data.Maybe (listToMaybe)
 import           Debug.Trace
 
 import           Control.Arrow ((&&&))
 import           Control.Lens (to, (%~), (<>~), (^.))
 import           Control.Monad (unless)
-import           Data.Char (isLower)
 import qualified Data.Char as C
 import           Data.Function (on, (&))
 import           Data.List (groupBy, nubBy, sortBy)

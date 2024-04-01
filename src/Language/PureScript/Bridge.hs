@@ -307,7 +307,7 @@ bridgeSumType br (SumType t cs is) =
     bridgeInstance Prisms = Prisms
     bridgeMember = over (memberDependencies . traversed) br
     extraInstances
-        | not (null cs) && all isNullary cs = [Enum, Bounded]
+        | not (null cs) && all isNullary cs = [Eq, Ord, Enum, Bounded]
         | otherwise = []
     isNullary (DataConstructor _ args) = args == Nullary
 
