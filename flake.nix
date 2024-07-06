@@ -66,6 +66,7 @@
             pkgs.purs-tidy-bin.purs-tidy-0_10_0
             pkgs.purs-backend-es
             pkgs.purescript-language-server
+            pkgs.esbuild
           ];
         };
 
