@@ -1,4 +1,4 @@
-module Main where
+module ArgonautMain where
 
 import Prelude
 

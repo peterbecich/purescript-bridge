@@ -1,4 +1,4 @@
-module Main where
+module RoundTripMain where
 
 import Prelude
 
