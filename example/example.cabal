@@ -24,6 +24,7 @@ library
                      , warp
                      , purescript-bridge
                      , QuickCheck
+                     , ghc-prim
   default-language:    Haskell2010
 
 executable example

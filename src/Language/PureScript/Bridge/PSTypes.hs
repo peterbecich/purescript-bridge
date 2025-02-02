@@ -15,7 +15,7 @@ import           Language.PureScript.Bridge.TypeInfo (HasHaskType (haskType),
                                                       TypeInfo (TypeInfo, _typeModule, _typeName, _typePackage, _typeParameters),
                                                       typeParameters)
 
--- | Uses  type parameters from 'haskType' (bridged).
+-- | Uses type parameters from 'haskType' (bridged).
 psArray :: (MonadReader BridgeData m) => m PSType
 psArray = TypeInfo "" "Prim" "Array" <$> psTypeParameters
 

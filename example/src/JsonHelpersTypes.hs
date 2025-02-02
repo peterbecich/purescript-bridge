@@ -17,6 +17,7 @@ myJsonHelpersTypes =
   , jsonHelpers . additionalInstances $ mkSumType @(ID A)
   , jsonHelpers . additionalInstances $ mkSumType @(ID2 A)
   , jsonHelpers . additionalInstances $ mkSumType @Foo
+  , jsonHelpers . additionalInstances $ mkSumType @FooList
   , jsonHelpers . additionalInstances $ mkSumType @(Bar A)
   , jsonHelpers . additionalInstances $ mkSumType @TestSum
   , jsonHelpers . additionalInstances $ mkSumType @TestData

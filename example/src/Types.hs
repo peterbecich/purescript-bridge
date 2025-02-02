@@ -15,6 +15,7 @@ import           Data.Aeson (FromJSON, SumEncoding (..), ToJSON (toEncoding),
                              genericToEncoding, sumEncoding,
                              tagSingleConstructors, unwrapUnaryRecords)
 import qualified Data.Map.Lazy as Map
+import           GHC.Types (List)
 import           Data.Proxy ()
 import           Data.Text (Text, pack)
 import           Data.Typeable (Typeable)
@@ -92,7 +93,7 @@ data Foo = Foo
   { _fooMessage  :: Text
   , _fooE        :: Either Text Int
   , _fooNumber   :: Int
-  , _fooList     :: [Int]
+  , _fooList     :: List Int
   , _fooMap      :: Map.Map Text Int
   , _fooBaz      :: Baz
   , _fooTestSum  :: TestSum
@@ -100,7 +101,9 @@ data Foo = Foo
   }
   deriving (FromJSON, Generic, Show, ToJSON)
 
-
+-- TODO newtype
+data FooList = FooList (List Int)
+  deriving (FromJSON, Generic, Show, ToJSON)
 
 instance {-# OVERLAPPING #-} ToJSON (Either Text Int) where
   toEncoding = genericToEncoding
