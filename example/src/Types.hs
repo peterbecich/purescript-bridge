@@ -6,6 +6,7 @@
 {-# LANGUAGE TemplateHaskell   #-}
 {-# LANGUAGE TypeApplications  #-}
 {-# LANGUAGE TypeOperators     #-}
+{-# LANGUAGE GeneralizedNewtypeDeriving #-}
 
 module Types where
 
@@ -48,11 +49,11 @@ makeLenses ''Baz
 
 -- https://github.com/eskimor/purescript-bridge/pull/89#issuecomment-1890994859
 data ID a = ID
-  deriving (Generic, Show)
+  deriving (Generic, Show, Enum, Ord, Eq)
 
 newtype ID2 a
   = ID2 { getID :: Int }
-  deriving (Generic, Show)
+  deriving (Generic, Show, Ord, Eq)
 
 
 

@@ -66,7 +66,7 @@ data ID a = ID
 instance (EncodeJson a) => EncodeJson (ID a) where
   encodeJson = defer \_ -> E.encode E.enum
 
-instance (DecodeJson a, DecodeJsonField a) => DecodeJson (ID a) where
+instance (Ord a, DecodeJson a, DecodeJsonField a) => DecodeJson (ID a) where
   decodeJson = defer \_ -> D.decode D.enum
 
 
@@ -80,11 +80,11 @@ derive instance (Eq a) => Eq (ID a)
 
 derive instance (Ord a) => Ord (ID a)
 
-instance Enum (ID a) where
+instance (Ord a, Ord (ID a)) => Enum (ID a) where
   succ = genericSucc
   pred = genericPred
 
-instance Bounded (ID a) where
+instance (Ord a, Ord (ID a)) => Bounded (ID a) where
   bottom = genericBottom
   top = genericTop
 
