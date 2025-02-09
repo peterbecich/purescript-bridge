@@ -17,6 +17,7 @@ myArgonautTypes =
   , argonautAesonGeneric . additionalInstances $ mkSumType @(ID A)
   , argonautAesonGeneric . additionalInstances $ mkSumType @(ID2 A)
   , argonautAesonGeneric . additionalInstances $ mkSumType @Foo
+  , argonautAesonGeneric . additionalInstances $ mkSumType @FooList
   , argonautAesonGeneric . additionalInstances $ mkSumType @(Bar A)
   , argonautAesonGeneric . additionalInstances $ mkSumType @TestSum
   , argonautAesonGeneric . additionalInstances $ mkSumType @TestData

@@ -51,7 +51,9 @@ doubleBridge :: BridgePart
 doubleBridge = typeName ^== "Double" >> return psNumber
 
 listBridge :: BridgePart
-listBridge = typeName ^== "[]" >> psArray
+listBridge = do
+  typeName ^== "[]" <|> typeName ^== "List"
+  psArray
 
 maybeBridge :: BridgePart
 maybeBridge = typeName ^== "Maybe" >> psMaybe

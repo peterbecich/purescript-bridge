@@ -69,13 +69,17 @@ instance Show (ID a) where
 
 derive instance Generic (ID a) _
 
--- instance Enum (ID a) where
---   succ = genericSucc
---   pred = genericPred
+derive instance (Eq a) => Eq (ID a)
 
--- instance Bounded (ID a) where
---   bottom = genericBottom
---   top = genericTop
+derive instance (Ord a) => Ord (ID a)
+
+instance Enum (ID a) where
+  succ = genericSucc
+  pred = genericPred
+
+instance Bounded (ID a) where
+  bottom = genericBottom
+  top = genericTop
 
 --------------------------------------------------------------------------------
 
@@ -162,6 +166,30 @@ fooTestSum = _Newtype <<< prop (Proxy :: _"_fooTestSum")
 
 fooTestData :: Lens' Foo TestData
 fooTestData = _Newtype <<< prop (Proxy :: _"_fooTestData")
+
+--------------------------------------------------------------------------------
+
+newtype FooList = FooList (Array Int)
+
+instance EncodeJson FooList where
+  encodeJson = defer \_ -> genericEncodeAeson Argonaut.defaultOptions
+
+instance DecodeJson FooList where
+  decodeJson = defer \_ -> genericDecodeAeson Argonaut.defaultOptions
+
+
+
+instance Show FooList where
+  show a = genericShow a
+
+derive instance Generic FooList _
+
+derive instance Newtype FooList _
+
+--------------------------------------------------------------------------------
+
+_FooList :: Iso' FooList (Array Int)
+_FooList = _Newtype
 
 --------------------------------------------------------------------------------
 
