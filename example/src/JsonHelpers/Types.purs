@@ -80,11 +80,11 @@ derive instance (Eq a) => Eq (ID a)
 
 derive instance (Ord a) => Ord (ID a)
 
-instance (Ord a, Ord (ID a)) => Enum (ID a) where
+instance (Ord a) => Enum (ID a) where
   succ = genericSucc
   pred = genericPred
 
-instance (Ord a, Ord (ID a)) => Bounded (ID a) where
+instance (Ord a) => Bounded (ID a) where
   bottom = genericBottom
   top = genericTop
 
@@ -101,7 +101,7 @@ instance (EncodeJson a) => EncodeJson (ID2 a) where
   encodeJson = defer \_ -> E.encode $ unwrap >$< (E.record
                                                  { getID: E.value :: _ Int })
 
-instance (DecodeJson a, DecodeJsonField a) => DecodeJson (ID2 a) where
+instance (Ord a, DecodeJson a, DecodeJsonField a) => DecodeJson (ID2 a) where
   decodeJson = defer \_ -> D.decode $ (ID2 <$> D.record "ID2" { getID: D.value :: _ Int })
 
 
@@ -224,7 +224,7 @@ newtype Bar a = Bar a
 instance (EncodeJson a) => EncodeJson (Bar a) where
   encodeJson = defer \_ -> E.encode $ unwrap >$< E.value
 
-instance (DecodeJson a, DecodeJsonField a) => DecodeJson (Bar a) where
+instance (Ord a, DecodeJson a, DecodeJsonField a) => DecodeJson (Bar a) where
   decodeJson = defer \_ -> D.decode $ (Bar <$> D.value)
 
 

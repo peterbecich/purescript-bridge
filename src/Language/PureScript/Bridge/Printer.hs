@@ -298,14 +298,14 @@ instances st@(SumType t dcs is) = traceShow st $ go <$> is
     go Bounded =
         mkInstance
             (mkType "Bounded" [t])
-            (const [])
+            boundedConstraints
             [ "bottom = genericBottom"
             , "top = genericTop"
             ]
     go Enum =
         mkInstance
             (mkType "Enum" [t])
-            (const [])
+            enumConstraints
             [ "succ = genericSucc"
             , "pred = genericPred"
             ]
@@ -383,6 +383,12 @@ eqConstraints = constrainWith "Eq"
 ordConstraints :: PSType -> [PSType]
 ordConstraints = constrainWith "Ord"
 
+enumConstraints :: PSType -> [PSType]
+enumConstraints = constrainWith "Ord"
+
+boundedConstraints :: PSType -> [PSType]
+boundedConstraints = constrainWith "Ord"
+
 -- https://github.com/eskimor/purescript-bridge/pull/89#issuecomment-1890994859
 showConstraints :: [Text] -> PSType -> [PSType]
 showConstraints used_variable t =
@@ -392,7 +398,9 @@ showConstraints used_variable t =
 
 decodeJsonConstraints :: PSType -> [PSType]
 decodeJsonConstraints psType =
-  (constrainWith "DecodeJson" psType) <> (constrainWith "DecodeJsonField" psType)
+  constrainWith "Ord" psType
+  <> constrainWith "DecodeJson" psType
+  <> constrainWith "DecodeJsonField" psType
 
 encodeJsonConstraints :: PSType -> [PSType]
 encodeJsonConstraints = constrainWith "EncodeJson"
