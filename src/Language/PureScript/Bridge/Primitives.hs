@@ -1,3 +1,4 @@
+{-# LANGUAGE CPP               #-}
 {-# LANGUAGE DataKinds         #-}
 {-# LANGUAGE FlexibleContexts  #-}
 {-# LANGUAGE OverloadedStrings #-}
@@ -51,9 +52,11 @@ doubleBridge :: BridgePart
 doubleBridge = typeName ^== "Double" >> return psNumber
 
 listBridge :: BridgePart
-listBridge = do
-  typeName ^== "[]" <|> typeName ^== "List"
-  psArray
+#if __GLASGOW_HASKELL__>=906
+listBridge = typeName ^== "List" >> psArray
+#else
+listBridge = typeName ^== "[]" >> psArray
+#endif
 
 maybeBridge :: BridgePart
 maybeBridge = typeName ^== "Maybe" >> psMaybe
