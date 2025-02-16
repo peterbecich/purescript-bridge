@@ -36,11 +36,11 @@
         "nixpkgs-lib": "nixpkgs-lib"
       },
       "locked": {
-        "lastModified": 1736143030,
-        "narHash": "sha256-+hu54pAoLDEZT9pjHlqL9DNzWz0NbUn8NEAHP7PQPzU=",
+        "lastModified": 1738453229,
+        "narHash": "sha256-7H9XgNiGLKN1G1CgRh0vUL4AheZSYzPm+zmZ7vxbJdo=",
         "owner": "hercules-ci",
         "repo": "flake-parts",
-        "rev": "b905f6fc23a9051a6e1b741e1438dbfc0634c6de",
+        "rev": "32ea77a06711b758da0ad9bd6a844c5740a87abd",
         "type": "github"
       },
       "original": {
@@ -66,11 +66,11 @@
     },
     "haskell-flake": {
       "locked": {
-        "lastModified": 1738272657,
-        "narHash": "sha256-J+HCnyi58e8TrxTlfVXdApdhebh3nKdAzTNdgYsvuak=",
+        "lastModified": 1739669127,
+        "narHash": "sha256-2s3wYTqKq7aBa41VHWg/G2XAOii8MW+WAMtLdgy1cek=",
         "owner": "srid",
         "repo": "haskell-flake",
-        "rev": "bb89665afe9b100f8559bd88c2392511a6415a1c",
+        "rev": "eabf8cf32e5f6a267ea637e1b3eabc9b7ddf29e1",
         "type": "github"
       },
       "original": {
@@ -81,11 +81,11 @@
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1738446313,
-        "narHash": "sha256-OikqLxKI7RTZeDK+4/MIG2AboNw7676FYOtY4kCCZh8=",
+        "lastModified": 1739679242,
+        "narHash": "sha256-8OxTv2m4W8rnaw+0uJjZnK2BVXNb9uTmD4hhphWIfDc=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "9015a21afc466b39b3747ceb1bedcdeb7f81c8fa",
+        "rev": "80e02910ac90de148ff08d16095ecfd60f2d74f6",
         "type": "github"
       },
       "original": {
@@ -96,14 +96,14 @@
     },
     "nixpkgs-lib": {
       "locked": {
-        "lastModified": 1735774519,
-        "narHash": "sha256-CewEm1o2eVAnoqb6Ml+Qi9Gg/EfNAxbRx1lANGVyoLI=",
+        "lastModified": 1738452942,
+        "narHash": "sha256-vJzFZGaCpnmo7I6i416HaBLpC+hvcURh/BQwROcGIp8=",
         "type": "tarball",
-        "url": "https://github.com/NixOS/nixpkgs/archive/e9b51731911566bbf7e4895475a87fe06961de0b.tar.gz"
+        "url": "https://github.com/NixOS/nixpkgs/archive/072a6db25e947df2f31aab9eccd0ab75d5b2da11.tar.gz"
       },
       "original": {
         "type": "tarball",
-        "url": "https://github.com/NixOS/nixpkgs/archive/e9b51731911566bbf7e4895475a87fe06961de0b.tar.gz"
+        "url": "https://github.com/NixOS/nixpkgs/archive/072a6db25e947df2f31aab9eccd0ab75d5b2da11.tar.gz"
       }
     },
     "purescript-overlay": {
