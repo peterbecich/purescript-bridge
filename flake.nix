@@ -29,7 +29,7 @@
         };
 
         haskellProjects.default = {
-          basePackages = pkgs.haskellPackages;
+          basePackages = pkgs.haskell.packages.ghc98;
           settings = {
             purescript-bridge.check = false;
             purescript-bridge.extraBuildDepends = [ pkgs.spago ];
@@ -67,6 +67,7 @@
             pkgs.purs-backend-es
             pkgs.purescript-language-server
             pkgs.esbuild
+            pkgs.nodejs
           ];
         };
 
