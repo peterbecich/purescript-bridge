@@ -103,6 +103,8 @@ allTests = do
 
                   derive instance Generic WeekInMonth _
 
+                  derive instance Eq WeekInMonth
+
                   derive instance Ord WeekInMonth
 
                   instance Enum WeekInMonth where
