@@ -1,5 +1,7 @@
 {-# LANGUAGE DataKinds         #-}
 {-# LANGUAGE DeriveAnyClass    #-}
+{-# LANGUAGE StandaloneDeriving #-}
+{-# LANGUAGE DerivingStrategies #-}
 {-# LANGUAGE DeriveGeneric     #-}
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE KindSignatures    #-}
@@ -22,7 +24,7 @@ import           Data.Typeable (Typeable)
 import           GHC.Generics (Generic)
 import           Language.PureScript.Bridge (BridgePart, Language (Haskell),
                                              argonautAesonGeneric,
-                                             defaultBridge, genericShow,
+                                             defaultBridge, genericShow, order,
                                              jsonHelpers, lenses, mkSumType)
 import           Language.PureScript.Bridge.PSTypes ()
 import           Language.PureScript.Bridge.SumType (SumType)
@@ -50,11 +52,15 @@ makeLenses ''Baz
 data ID a = ID
   deriving (Generic, Show)
 
+deriving instance Eq a => Eq (ID a)
+deriving instance Ord a => Ord (ID a)
+
 newtype ID2 a
   = ID2 { getID :: Int }
   deriving (Generic, Show)
 
-
+deriving instance Eq a => Eq (ID2 a)
+deriving instance Ord a => Ord (ID2 a)
 
 data TestSum
   = Nullary

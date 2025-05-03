@@ -6,7 +6,7 @@
 module JsonHelpersTypes where
 
 import           Language.PureScript.Bridge (Language (Haskell), jsonHelpers,
-                                             mkSumType)
+                                             mkSumType, order)
 import           Language.PureScript.Bridge.SumType (SumType)
 import           Language.PureScript.Bridge.TypeParameters (A)
 import           Types
