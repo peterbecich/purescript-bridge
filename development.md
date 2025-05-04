@@ -1,14 +1,24 @@
-# Regenerate everything
-reset && stack run generate-purescript && mv src/Argonaut/* example/src/Argonaut && mv src/JsonHelpers/* example/src/JsonHelpers;  cd example && spago bundle --bundle-type app --outfile static/index.js; cd ..
+# Development
 
-# Regenerate purescript files
-reset && cd example && spago bundle --bundle-type app --outfile static/index.js; cd ..
+## Example
+See `example/readme.md`
 
-# Roundtrip server example
+## Spago
+All PureScript code can be built from the root of the repository.
+*Required*: Spago 0.93.44+
 
-## Tab 1
-stack run example
+## Integration tests
 
-## Tab 2
-cd example/static
-parcel serve index.html
+Run `cabal test` in the root of the repository.
+
+This includes:
+* unit tests
+* Round Trip integration tests for two libraries
+  * json-helpers
+  * argonaut-aeson-generic
+
+## Nix Flake
+
+*All requirements* (including Spago, Cabal, GHC) to build and test the library are provided in the Nix Flake.
+
+Enter the development shell via `nix develop`.

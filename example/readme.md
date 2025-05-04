@@ -18,7 +18,7 @@ On page load, the client:
 ## Nix
 The `nix develop` shell will provide PureScript 0.15 and Spago.
 ## Without Nix
-You must install PureScript 0.15 and [spago-legacy](https://github.com/purescript/spago-legacy).
+You must install PureScript 0.15 and [spago-next](https://github.com/purescript/spago).
 
 # Running the example
 - Enter the `example` directory

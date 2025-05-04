@@ -96,6 +96,8 @@ Usage of this library is documented in `Language.Purescript.Bridge`, with `write
 
 There is an example; see `./example/readme.md`.
 
+Also see `./development.md`.
+
 ## Status
 
 It works for my use case and is used in production. PRs for more `PSType`s definitions and bridges are very welcome! 
