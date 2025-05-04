@@ -34,6 +34,12 @@ jobs:
       - name: "Check `nix develop` shell"
         run: nix develop --check
       - name: "Check `nix develop` shell can run command"
-        run: nix develop --command "echo"
+        run: nix develop --command echo
       - run: nix build
       - run: nix flake check
+      - name: "Run all Haskell tests in the `nix develop` shell"
+        run: |
+          nix develop --command cabal update
+          nix develop --command cabal test
+      - name: "Run all PureScript tests in the `nix develop` shell"
+        run: nix develop --command spago test
