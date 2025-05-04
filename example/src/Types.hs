@@ -132,7 +132,7 @@ data Bar a = Bar a
 
 makeLenses ''Bar
 
-additionalInstances = lenses . genericShow
+additionalInstances = order . lenses . genericShow
 
 myBridge :: BridgePart
 myBridge = defaultBridge

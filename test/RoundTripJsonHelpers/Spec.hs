@@ -52,7 +52,6 @@ myBridge = defaultBridge
 instancesToGenerate = equal
   . order
   . genericShow
-  . order
   . jsonHelpers
 
 myTypes :: [SumType 'Haskell]

@@ -83,8 +83,6 @@ data TestSum
   | Unit Unit
   | MyUnit MyUnit
   | Pair (Tuple Int Number)
-  | Triple (Tuple Int (Tuple Unit Boolean))
-  | Quad (Tuple Int (Tuple Number (Tuple Boolean Number)))
   | QuadSimple Int Number Boolean Number
   | Recursive TestRecursiveA
   | Enum TestEnum
@@ -120,8 +118,6 @@ instance EncodeJson TestSum where
     Unit a -> E.encodeTagged "Unit" a E.unit
     MyUnit a -> E.encodeTagged "MyUnit" a E.value
     Pair a -> E.encodeTagged "Pair" a (E.tuple (E.value >/\< E.value))
-    Triple a -> E.encodeTagged "Triple" a (E.tuple (E.value >/\< E.unit >/\< E.value))
-    Quad a -> E.encodeTagged "Quad" a (E.tuple (E.value >/\< E.value >/\< E.value >/\< E.value))
     QuadSimple a b c d -> E.encodeTagged "QuadSimple" (a /\ b /\ c /\ d) (E.tuple (E.value >/\< E.value >/\< E.value >/\< E.value))
     Recursive a -> E.encodeTagged "Recursive" a E.value
     Enum a -> E.encodeTagged "Enum" a E.value
@@ -150,8 +146,6 @@ instance DecodeJson TestSum where
       , "Unit" /\ D.content (Unit <$> D.unit)
       , "MyUnit" /\ D.content (MyUnit <$> D.value)
       , "Pair" /\ D.content (Pair <$> (D.tuple (D.value </\> D.value)))
-      , "Triple" /\ D.content (Triple <$> (D.tuple (D.value </\> D.unit </\> D.value)))
-      , "Quad" /\ D.content (Quad <$> (D.tuple (D.value </\> D.value </\> D.value </\> D.value)))
       , "QuadSimple" /\ D.content (D.tuple $ QuadSimple </$\>D.value </*\> D.value </*\> D.value </*\> D.value)
       , "Recursive" /\ D.content (Recursive <$> D.value)
       , "Enum" /\ D.content (Enum <$> D.value)

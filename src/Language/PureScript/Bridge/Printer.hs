@@ -15,7 +15,7 @@ import           Control.Lens (to, (%~), (<>~), (^.))
 import           Control.Monad (unless)
 import qualified Data.Char as C
 import           Data.Function (on, (&))
-import           Data.List (groupBy, nubBy, sortBy)
+import           Data.List (groupBy, nubBy, sortBy, nub)
 import           Data.List.NonEmpty (NonEmpty ((:|)))
 import qualified Data.List.NonEmpty as NE
 import           Data.Map.Strict (Map)
@@ -251,10 +251,13 @@ getVariableFromTypeInfo ti =
         Nothing     -> Nothing
         Just (f, _) -> if isLower f then Just x else Nothing
 
+instance Eq Doc where
+  (==) a b = (show a) == (show b)
+
 {- | Given a PureScript type, generate instances for typeclass instances it claims to have.
 -}
 instances :: SumType 'PureScript -> [Doc]
-instances st@(SumType t dcs is) = traceShow st $ go <$> is
+instances st@(SumType t dcs is) = nub $ go <$> is
   where
     getVariablesFromDataConstructor :: DataConstructor 'PureScript -> [Text]
     getVariablesFromDataConstructor dc = case _sigValues dc of
@@ -269,6 +272,7 @@ instances st@(SumType t dcs is) = traceShow st $ go <$> is
     mkConstraints getConstraints = case getConstraints t of
         [] -> []
         constraints -> [encloseHsep lparen rparen comma (typeInfoToDecl <$> constraints), "=>"]
+
     mkInstance instanceHead getConstraints methods =
         vsep
             [ hsep
@@ -278,6 +282,7 @@ instances st@(SumType t dcs is) = traceShow st $ go <$> is
                 ]
             , indent 2 $ vsep methods
             ]
+
     mkDerivedInstance instanceHead getConstraints =
         hsep
             [ "derive instance"
@@ -290,6 +295,7 @@ instances st@(SumType t dcs is) = traceShow st $ go <$> is
             ]
     toKind1 (TypeInfo p m n []) = TypeInfo p m n []
     toKind1 (TypeInfo p m n ps) = TypeInfo p m n $ init ps
+
     go :: PSInstance -> Doc
     go (Custom CustomInstance {..}) = case _customImplementation of
         Derive -> mkDerivedInstance _customHead (const _customConstraints)

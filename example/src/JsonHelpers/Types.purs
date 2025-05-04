@@ -43,6 +43,10 @@ instance EncodeJson Baz where
 instance DecodeJson Baz where
   decodeJson = defer \_ -> D.decode $ (Baz <$> D.record "Baz" { _bazMessage: D.value :: _ String })
 
+derive instance Eq Baz
+
+derive instance Ord Baz
+
 
 
 instance Show Baz where
@@ -70,16 +74,16 @@ instance (EncodeJson a) => EncodeJson (ID a) where
 instance (DecodeJson a, DecodeJsonField a) => DecodeJson (ID a) where
   decodeJson = defer \_ -> D.decode D.enum
 
+derive instance (Eq a) => Eq (ID a)
+
+derive instance (Ord a) => Ord (ID a)
+
 
 
 instance Show (ID a) where
   show a = genericShow a
 
 derive instance Generic (ID a) _
-
-derive instance (Eq a) => Eq (ID a)
-
-derive instance (Ord a) => Ord (ID a)
 
 instance Enum (ID a) where
   succ = genericSucc
@@ -104,6 +108,10 @@ instance (EncodeJson a) => EncodeJson (ID2 a) where
 
 instance (DecodeJson a, DecodeJsonField a) => DecodeJson (ID2 a) where
   decodeJson = defer \_ -> D.decode $ (ID2 <$> D.record "ID2" { getID: D.value :: _ Int })
+
+derive instance (Eq a) => Eq (ID2 a)
+
+derive instance (Ord a) => Ord (ID2 a)
 
 
 
@@ -156,6 +164,10 @@ instance DecodeJson Foo where
       , _fooTestData: D.value :: _ TestData
       })
 
+derive instance Eq Foo
+
+derive instance Ord Foo
+
 
 
 instance Show Foo where
@@ -204,6 +216,10 @@ instance EncodeJson FooList where
 instance DecodeJson FooList where
   decodeJson = defer \_ -> D.decode $ (FooList <$> D.value)
 
+derive instance Eq FooList
+
+derive instance Ord FooList
+
 
 
 instance Show FooList where
@@ -227,6 +243,10 @@ instance (EncodeJson a) => EncodeJson (Bar a) where
 
 instance (DecodeJson a, DecodeJsonField a) => DecodeJson (Bar a) where
   decodeJson = defer \_ -> D.decode $ (Bar <$> D.value)
+
+derive instance (Eq a) => Eq (Bar a)
+
+derive instance (Ord a) => Ord (Bar a)
 
 
 
@@ -268,6 +288,10 @@ instance DecodeJson TestSum where
       , "Number" /\ D.content (Number <$> D.value)
       , "FooTuple" /\ D.content (FooTuple <$> (D.tuple (D.value </\> D.value)))
       ]
+
+derive instance Eq TestSum
+
+derive instance Ord TestSum
 
 
 
@@ -320,6 +344,10 @@ instance DecodeJson TestData where
       [ "TMaybe" /\ D.content (TMaybe <$> (D.maybe D.value))
       , "TEither" /\ D.content (TEither <$> D.value)
       ]
+
+derive instance Eq TestData
+
+derive instance Ord TestData
 
 
 

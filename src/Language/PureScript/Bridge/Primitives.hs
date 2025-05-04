@@ -73,7 +73,8 @@ textBridge = do
     return psString
 
 unitBridge :: BridgePart
-unitBridge = typeName ^== "()" >> return psUnit
+unitBridge =
+  typeName ^== "()" <|> typeName ^== "Unit" >> return psUnit
 
 noContentBridge :: BridgePart
 noContentBridge = typeName ^== "NoContent" >> return psUnit

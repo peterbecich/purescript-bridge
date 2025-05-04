@@ -36,6 +36,10 @@ instance EncodeJson Baz where
 instance DecodeJson Baz where
   decodeJson = defer \_ -> genericDecodeAeson Argonaut.defaultOptions
 
+derive instance Eq Baz
+
+derive instance Ord Baz
+
 
 
 instance Show Baz where
@@ -63,16 +67,16 @@ instance (EncodeJson a) => EncodeJson (ID a) where
 instance (DecodeJson a, DecodeJsonField a) => DecodeJson (ID a) where
   decodeJson = defer \_ -> genericDecodeAeson Argonaut.defaultOptions
 
+derive instance (Eq a) => Eq (ID a)
+
+derive instance (Ord a) => Ord (ID a)
+
 
 
 instance Show (ID a) where
   show a = genericShow a
 
 derive instance Generic (ID a) _
-
-derive instance (Eq a) => Eq (ID a)
-
-derive instance (Ord a) => Ord (ID a)
 
 instance Enum (ID a) where
   succ = genericSucc
@@ -96,6 +100,10 @@ instance (EncodeJson a) => EncodeJson (ID2 a) where
 
 instance (DecodeJson a, DecodeJsonField a) => DecodeJson (ID2 a) where
   decodeJson = defer \_ -> genericDecodeAeson Argonaut.defaultOptions
+
+derive instance (Eq a) => Eq (ID2 a)
+
+derive instance (Ord a) => Ord (ID2 a)
 
 
 
@@ -129,6 +137,10 @@ instance EncodeJson Foo where
 
 instance DecodeJson Foo where
   decodeJson = defer \_ -> genericDecodeAeson Argonaut.defaultOptions
+
+derive instance Eq Foo
+
+derive instance Ord Foo
 
 
 
@@ -178,6 +190,10 @@ instance EncodeJson FooList where
 instance DecodeJson FooList where
   decodeJson = defer \_ -> genericDecodeAeson Argonaut.defaultOptions
 
+derive instance Eq FooList
+
+derive instance Ord FooList
+
 
 
 instance Show FooList where
@@ -201,6 +217,10 @@ instance (EncodeJson a) => EncodeJson (Bar a) where
 
 instance (DecodeJson a, DecodeJsonField a) => DecodeJson (Bar a) where
   decodeJson = defer \_ -> genericDecodeAeson Argonaut.defaultOptions
+
+derive instance (Eq a) => Eq (Bar a)
+
+derive instance (Ord a) => Ord (Bar a)
 
 
 
@@ -230,6 +250,10 @@ instance EncodeJson TestSum where
 
 instance DecodeJson TestSum where
   decodeJson = defer \_ -> genericDecodeAeson Argonaut.defaultOptions
+
+derive instance Eq TestSum
+
+derive instance Ord TestSum
 
 
 
@@ -276,6 +300,10 @@ instance EncodeJson TestData where
 
 instance DecodeJson TestData where
   decodeJson = defer \_ -> genericDecodeAeson Argonaut.defaultOptions
+
+derive instance Eq TestData
+
+derive instance Ord TestData
 
 
 

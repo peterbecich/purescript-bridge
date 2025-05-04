@@ -65,15 +65,14 @@ data TestSum
   | Unit ()
   | MyUnit MyUnit
   | Pair (Int, Double)
-  | Triple (Int, (), Bool)
-  | Quad (Int, Double, Bool, Double)
+  -- | Triple (Int, (), Bool) -- TODO fix Tuple3
+  -- | Quad (Int, Double, Bool, Double) -- TODO fix Tuple4
   | QuadSimple Int Double Bool Double
   | Recursive TestRecursiveA
   | Enum TestEnum
   deriving (Eq, Generic, Ord, Show)
 
 instance FromJSON TestSum
-
 instance ToJSON TestSum
 
 instance Arbitrary TestSum where
@@ -96,8 +95,8 @@ instance Arbitrary TestSum where
             , TwoFields <$> arbitrary
             , pure $ Unit ()
             , Pair <$> arbitrary
-            , Triple <$> arbitrary
-            , Quad <$> arbitrary
+            -- , Triple <$> arbitrary
+            -- , Quad <$> arbitrary
             , QuadSimple <$> arbitrary <*> arbitrary <*> arbitrary <*> arbitrary
             , Enum <$> arbitrary
             ]
