@@ -16,10 +16,7 @@ import Data.Argonaut.Encode.Aeson ((>$<), (>/\<))
 import Data.Argonaut.Encode.Aeson as E
 import Data.Argonaut.Encode.Class (class EncodeJson, encodeJson)
 import Data.Argonaut.Encode.Class as Argonaut
-import Data.Bounded.Generic (genericBottom, genericTop)
 import Data.Either (Either)
-import Data.Enum (class Enum)
-import Data.Enum.Generic (genericPred, genericSucc)
 import Data.Generic.Rep (class Generic)
 import Data.Lens (Iso', Lens', Prism', iso, lens, prism')
 import Data.Lens.Iso.Newtype (_Newtype)
@@ -66,13 +63,13 @@ bazMessage = _Newtype <<< prop (Proxy :: _"_bazMessage")
 
 --------------------------------------------------------------------------------
 
-data ID a = ID
+newtype ID a = ID a
 
 instance (EncodeJson a) => EncodeJson (ID a) where
-  encodeJson = defer \_ -> E.encode E.enum
+  encodeJson = defer \_ -> E.encode $ unwrap >$< E.value
 
 instance (DecodeJson a, DecodeJsonField a) => DecodeJson (ID a) where
-  decodeJson = defer \_ -> D.decode D.enum
+  decodeJson = defer \_ -> D.decode $ (ID <$> D.value)
 
 derive instance (Eq a) => Eq (ID a)
 
@@ -80,23 +77,17 @@ derive instance (Ord a) => Ord (ID a)
 
 
 
-instance Show (ID a) where
+instance (Show a) => Show (ID a) where
   show a = genericShow a
 
 derive instance Generic (ID a) _
 
-instance Enum (ID a) where
-  succ = genericSucc
-  pred = genericPred
-
-instance Bounded (ID a) where
-  bottom = genericBottom
-  top = genericTop
+derive instance Newtype (ID a) _
 
 --------------------------------------------------------------------------------
 
-_ID :: forall a. Iso' (ID a) Unit
-_ID = iso (const unit) (const ID)
+_ID :: forall a. Iso' (ID a) a
+_ID = _Newtype
 
 --------------------------------------------------------------------------------
 

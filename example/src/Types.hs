@@ -49,7 +49,7 @@ instance ToJSON Baz where
 makeLenses ''Baz
 
 -- https://github.com/eskimor/purescript-bridge/pull/89#issuecomment-1890994859
-data ID a = ID
+data ID a = ID a
   deriving (Generic, Show)
 
 deriving instance Eq a => Eq (ID a)
