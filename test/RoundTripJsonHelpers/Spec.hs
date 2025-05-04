@@ -102,7 +102,8 @@ roundtripSpec = do
     runApp = do
         (Just hin, Just hout, Just herr, hproc) <-
             System.Process.createProcess
-                (System.Process.proc "spago" ["run"])
+                (System.Process.proc "spago"
+                 ["run", "--main", "RoundTripJsonHelpersTest"])
                     { std_in = System.Process.CreatePipe
                     , std_out = System.Process.CreatePipe
                     , std_err = System.Process.CreatePipe

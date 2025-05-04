@@ -107,7 +107,8 @@ roundtripSpec = do
     runApp = do
         (Just hin, Just hout, Just herr, hproc) <-
             createProcess
-                (proc "spago" ["run"])
+                (proc "spago"
+                  ["run", "--main", "RoundTripArgonautAesonGenericTest"])
                     { std_in = CreatePipe
                     , std_out = CreatePipe
                     , std_err = CreatePipe

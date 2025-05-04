@@ -1,4 +1,4 @@
-module RoundTripMain where
+module RoundTripJsonHelpersTest where
 
 import Prelude
 

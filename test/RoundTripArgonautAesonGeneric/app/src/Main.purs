@@ -1,4 +1,4 @@
-module ArgonautMain where
+module RoundTripArgonautAesonGenericTest where
 
 import Prelude
 
