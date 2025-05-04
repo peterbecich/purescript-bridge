@@ -24,6 +24,7 @@ import Data.Lens.Record (prop)
 import Data.Maybe (Maybe(..))
 import Data.Newtype (class Newtype)
 import Data.Show.Generic (genericShow)
+import Data.Tuple (Tuple)
 import Foreign.Object (Object)
 import Type.Proxy (Proxy(Proxy))
 
@@ -222,6 +223,7 @@ data TestSum
   | Bool Boolean
   | Int Int
   | Number Number
+  | FooTuple (Tuple Int Int)
 
 instance EncodeJson TestSum where
   encodeJson = defer \_ -> genericEncodeAeson Argonaut.defaultOptions
@@ -256,6 +258,11 @@ _Int = prism' Int case _ of
 _Number :: Prism' TestSum Number
 _Number = prism' Number case _ of
   (Number a) -> Just a
+  _ -> Nothing
+
+_FooTuple :: Prism' TestSum (Tuple Int Int)
+_FooTuple = prism' FooTuple case _ of
+  (FooTuple a) -> Just a
   _ -> Nothing
 
 --------------------------------------------------------------------------------

@@ -29,6 +29,7 @@ import Data.Map as Map
 import Data.Maybe (Maybe(..))
 import Data.Newtype (class Newtype, unwrap)
 import Data.Show.Generic (genericShow)
+import Data.Tuple (Tuple)
 import Data.Tuple.Nested ((/\))
 import Foreign.Object (Object)
 import Type.Proxy (Proxy(Proxy))
@@ -248,6 +249,7 @@ data TestSum
   | Bool Boolean
   | Int Int
   | Number Number
+  | FooTuple (Tuple Int Int)
 
 instance EncodeJson TestSum where
   encodeJson = defer \_ -> case _ of
@@ -255,6 +257,7 @@ instance EncodeJson TestSum where
     Bool a -> E.encodeTagged "Bool" a E.value
     Int a -> E.encodeTagged "Int" a E.value
     Number a -> E.encodeTagged "Number" a E.value
+    FooTuple a -> E.encodeTagged "FooTuple" a (E.tuple (E.value >/\< E.value))
 
 instance DecodeJson TestSum where
   decodeJson = defer \_ -> D.decode
@@ -263,6 +266,7 @@ instance DecodeJson TestSum where
       , "Bool" /\ D.content (Bool <$> D.value)
       , "Int" /\ D.content (Int <$> D.value)
       , "Number" /\ D.content (Number <$> D.value)
+      , "FooTuple" /\ D.content (FooTuple <$> (D.tuple (D.value </\> D.value)))
       ]
 
 
@@ -292,6 +296,11 @@ _Int = prism' Int case _ of
 _Number :: Prism' TestSum Number
 _Number = prism' Number case _ of
   (Number a) -> Just a
+  _ -> Nothing
+
+_FooTuple :: Prism' TestSum (Tuple Int Int)
+_FooTuple = prism' FooTuple case _ of
+  (FooTuple a) -> Just a
   _ -> Nothing
 
 --------------------------------------------------------------------------------

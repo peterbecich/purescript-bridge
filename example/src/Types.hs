@@ -67,6 +67,7 @@ data TestSum
   | Bool Bool
   | Int Int
   | Number Double
+  | FooTuple (Int, Int)
   deriving (Eq, FromJSON, Generic, Ord, Show, ToJSON)
 
 instance Arbitrary Text where
