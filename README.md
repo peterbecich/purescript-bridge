@@ -1,5 +1,7 @@
 # purescript-bridge
-[![Haskell library and example](https://github.com/eskimor/purescript-bridge/actions/workflows/haskell.yml/badge.svg)](https://github.com/eskimor/purescript-bridge/actions/workflows/haskell.yml) [![PureScript example](https://github.com/eskimor/purescript-bridge/actions/workflows/purescript.yml/badge.svg)](https://github.com/eskimor/purescript-bridge/actions/workflows/purescript.yml) [![Nix Flake](https://github.com/eskimor/purescript-bridge/actions/workflows/nix-flake.yml/badge.svg)](https://github.com/eskimor/purescript-bridge/actions/workflows/nix-flake.yml)
+[![Haskell and PureScript](https://github.com/eskimor/purescript-bridge/actions/workflows/haskell-and-purescript.yml/badge.svg)](https://github.com/eskimor/purescript-bridge/actions/workflows/haskell-and-purescript.yml)
+[![Haskell Stack and PureScript](https://github.com/eskimor/purescript-bridge/actions/workflows/stack.yml/badge.svg)](https://github.com/eskimor/purescript-bridge/actions/workflows/stack.yml)
+[![Nix Flake](https://github.com/eskimor/purescript-bridge/actions/workflows/nix-flake.yml/badge.svg)](https://github.com/eskimor/purescript-bridge/actions/workflows/nix-flake.yml)
 
 Translate your Haskell types to PureScript types. It should in theory work for almost all Haskell types, including type constructors!
 You just have to instantiate it with dummy parameters from e.g. "Language.PureScript.Bridge.TypeParameters".

@@ -1,4 +1,4 @@
-resolver: lts-21.16
+resolver: lts-23.21
 packages:
 - '.'
 - 'example/.'
