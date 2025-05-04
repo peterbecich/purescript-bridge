@@ -56,11 +56,7 @@ cabal run generate-purescript
 
 - Generate the Javascript bundle:
 ```
-spago bundle-app --to static/index.js
-```
-- or:
-```
-spago bundle-app --watch --to static/index.js
+spago bundle --bundle-type app --module ExampleMain --outfile static/index.js
 ```
 
 - Restart the server

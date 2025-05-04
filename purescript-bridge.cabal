@@ -33,7 +33,7 @@ library
                 , Language.PureScript.Bridge.Tuple
                 , Language.PureScript.Bridge.TypeInfo
                 , Language.PureScript.Bridge.TypeParameters
-  build-depends:       base >=4.8 && < 6.0
+  build-depends:       base >=4.18 && < 6.0
                      , containers
                      , directory
                      , filepath

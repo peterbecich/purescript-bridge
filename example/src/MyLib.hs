@@ -81,4 +81,5 @@ api = Proxy
 
 main :: IO ()
 main = do
+  putStrLn "Running at port 8080..."
   run 8080 . serve api $ fooServer :<|> staticServer
